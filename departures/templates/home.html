@@ -1,0 +1,110 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MBTA Rail Information</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+
+<style type="text/css">
+	.font_color {
+		color: yellow;
+	}
+
+</style>
+
+
+</head>
+<body ng-app="mbta" style="background-color: black">
+	<div class="ui container" ng-controller="ScheduleCtrl" style="margin-top: 20px" >
+		<div class="ui center aligned icon input header font_color">
+			<div class="ui grid">
+				<div class="five wide column">
+					<h1 class="font_color">Sunday</h1>
+					<h2 class="font_color">[[ current_date ]]</h2>
+				</div>
+				<div class="six wide column">
+					<h1 style="color: white">
+						<select class="ui search dropdown" ng-model="query" ng-change="loadData()">
+						  <option value="place-north">North Station</option>
+						  <option value="place-sstat">South Station</option>
+						</select>
+						Information
+					</h1>
+					
+				</div>
+				<div class="five wide column">
+					<h1 class="font_color aligned-right">[[ current_date ]]</h1>
+				</div>
+				
+			</div>
+
+			
+			
+
+		</div>
+		<h2 ng-if="results.departure.length > 0" class="font_color">Departure Information</h2>
+
+
+			<table class="ui selectable table inverted font_color">
+			  <thead>
+			    <tr>
+			      <th>Carrier</th>
+			      <th>Time</th>
+			      <th>Destination</th>			      
+			      <th>Train#</th>
+				  <th>Track#</th>
+				  <th>Status#</th>
+			    </tr>
+			  </thead>
+			  <tbody ng-repeat="dep in results.departure">
+			    <tr>
+			      <td>[[ dep.carrier ]]</td>
+			      <td>[[ dep.departure_time ]]</td>
+			      <td>[[ dep.destination ]]</td>
+			      <td>[[ dep.vehicle ]]</td>
+			      <td>[[ dep.track ]]</td>
+			      <td>[[ dep.status]]</td>
+			    </tr>
+			  </tbody>
+
+			</table>
+
+		<h2 ng-if="results.arrival.length > 0" class="font_color">Arrival Information</h2>
+
+			<table class="ui selectable inverted table font_color">
+			  <thead>
+			    <tr>
+			      <th>Carrier</th>
+			      <th>Time</th>
+			      <th>Destination</th>			      
+			      <th>Train#</th>
+				  <th>Track#</th>
+				  <th>Status#</th>
+			    </tr>
+			  </thead>
+			  <tbody ng-repeat="dep in results.arrival">
+			    <tr>
+			      <td>[[ dep.carrier ]]</td>
+			      <td>[[ dep.arrival_time ]]</td>
+			      <td>[[ dep.destination ]]</td>
+			      <td>[[ dep.vehicle ]]</td>
+			      <td>[[ dep.track ]]</td>
+			      <td>[[ dep.status]]</td>
+			    </tr>
+			  </tbody>
+
+			</table>
+
+	</div>
+</body>
+
+
+<script type="text/javascript" src="{% static "js/angular.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/restangular.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/underscore-min.js" %}"></script>
+
+<script type="text/javascript" src="{% static "js/app.js" %}"></script>
+
+
+</html>
