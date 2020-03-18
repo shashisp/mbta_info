@@ -7,6 +7,8 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.http import JsonResponse
 import requests
+from datetime import datetime
+from dateutil.parser import parse
 
 
 def get_info_object(data_list, object_id):
@@ -59,7 +61,7 @@ def clean_up_response(data):
 			schedule_id = dep.get('relationships')['schedule']['data']['id']
 			schedule_info = get_info_object(included_schedules, schedule_id)
 
-			departure_time = schedule_info.get("attributes")["arrival_time"]
+			arrival_time = parse(schedule_info.get("attributes")["arrival_time"])
 
 			if not track:
 				track = "TBD"
@@ -68,7 +70,7 @@ def clean_up_response(data):
 				"carrier": "MBTA",
 				"track": track,
 				"vehicle": vehicle,
-				"arrival_time": departure_time,
+				"arrival_time": arrival_time.strftime("%H:%M %p"),
 				"status": status,
 				"destination": destination
 			}
@@ -92,7 +94,7 @@ def clean_up_response(data):
 			schedule_id = dep.get('relationships')['schedule']['data']['id']
 			schedule_info = get_info_object(included_schedules, schedule_id)
 
-			departure_time = schedule_info.get("attributes")["departure_time"]
+			departure_time = parse(schedule_info.get("attributes")["departure_time"])
 
 			if not track:
 				track = "TBD"
@@ -101,11 +103,14 @@ def clean_up_response(data):
 				"carrier": "MBTA",
 				"track": track,
 				"vehicle": vehicle,
-				"departure_time": departure_time,
+				"departure_time": departure_time.strftime("%H:%M %p"),
 				"status": status,
 				"destination": destination
 			}
 			final_data['departure'].append(response)
+
+	# final_data['departure'] = final_data['departure'].sort(key = lambda x: x['departure_time'])
+	# final_data['arrival'] = final_data['arrival'].sort(key = lambda x: x['arrival_time'])
 
 	return final_data
 
@@ -122,8 +127,3 @@ def data_api(request):
 
 class HomePageView(TemplateView):
     template_name = "home.html"
-
-
-
-
-
